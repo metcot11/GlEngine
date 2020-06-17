@@ -20,6 +20,7 @@ public:
 	void On();
 	void Off();
 
+		/*Uniforms*/
 	void SetUniformInt(const char* UniformName, int value);
 	void SetUniformFloat(const char* UniformName, float value);
 	void SetUniformBool(const char* UniformName, bool value);
