@@ -65,6 +65,11 @@ void Shader::SetUniformVec4(const char* UniformName, float x, float y, float z, 
 	glUniform4f(glGetUniformLocation(ShaderId, UniformName), x, y, z, t);
 }
 
+void Shader::SetUniformMat4(const char* UniformName, glm::mat4 value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(ShaderId, UniformName), 1, GL_FALSE, glm::value_ptr(value));
+}
+
 void Shader::CompileFragmentShader()
 {
 	FragId = glCreateShader(GL_FRAGMENT_SHADER);

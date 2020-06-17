@@ -1,6 +1,10 @@
 #include <glew.h>
 #include <glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include"Textures/Texture Loader/stb_image.h"
 #include "Shader.h"
 
@@ -9,6 +13,7 @@
 
 
 void ProcessImput(GLFWwindow* window);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 float mixValue = 0.2f;
 
@@ -25,17 +30,19 @@ int main(void) {
 
 			/* Create a windowed mode window and its OpenGL context */
 	GLFWwindow* Window = glfwCreateWindow(Window_Width, Window_Heigth, "Window", NULL, NULL);
+
 	glfwMakeContextCurrent(Window);
+	glfwSetFramebufferSizeCallback(Window, framebuffer_size_callback);
 
 	if (glewInit() != GLEW_OK)
 		return -1;
 		/* Rendering a triangule */
 	float vertices[] = {
 				/*Vertices*/		/*Colors*/		/*Texture1*/
-		 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    2.0f, 2.0f,		
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    2.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    1.0f, 1.0f,		
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
 		-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 2.0f
+		-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f
 	};
 	unsigned int indices[] = {
 		0, 1, 3,
@@ -131,8 +138,20 @@ int main(void) {
 		glBindTexture(GL_TEXTURE_2D, Texture2);
 
 		shader.On();
+		glm::mat4 Trans = glm::mat4(1.0f);
+		Trans = glm::translate(Trans, glm::vec3(0.5f, -0.5f, 0.5f));
+		Trans = glm::rotate(Trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
+		shader.SetUniformMat4("Transform", Trans);
+
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
+
+		glm::mat4 Trans2 = glm::mat4(1.0f);
+		Trans2 = glm::translate(Trans2, glm::vec3(0.5f, 0.5f, 0.5f));
+		Trans2 = glm::rotate(Trans2, (float)glfwGetTime(), glm::vec3(0.0, 0.0, -1.0));
+		shader.SetUniformMat4("Transform", Trans2);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		ProcessImput(Window);
 				/* Swap front and back buffers */
 		glfwSwapBuffers(Window);
@@ -162,4 +181,8 @@ void ProcessImput(GLFWwindow* window)
 		if (mixValue <= 0.0f)
 			mixValue = 0.0f;
 	}
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
