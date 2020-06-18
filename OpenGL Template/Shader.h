@@ -20,6 +20,7 @@ private:
 	const char* VertexShader;
 public:
 	Shader(const char* pathFragmShader, const char* pathVertShader);
+	~Shader();
 	
 	void On();
 	void Off();

@@ -35,6 +35,11 @@ Shader::Shader(const char* pathFragmShader, const char* pathVertShader)
 	glDeleteShader(FragId);
 }
 
+Shader::~Shader()
+{
+	glDeleteShader(ShaderId);
+}
+
 void Shader::On()
 {
 	glUseProgram(ShaderId);
