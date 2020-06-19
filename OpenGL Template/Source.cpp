@@ -7,6 +7,7 @@
 
 #include"Textures/Texture Loader/stb_image.h"
 #include "Shader.h"
+#include "vertices.h"
 
 #include <math.h>
 #include <iostream>
@@ -16,17 +17,15 @@ void ProcessImput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 float mixValue = 0.2f;
+const int Window_Width = 1240;
+const int Window_Heigth = 640;
+int FrameBufferWidth = 0;
+int FrameBufferHeigth = 0;
 
 int main(void) {
 
 
 	glfwInit();
-
-
-	const int Window_Width = 1240;
-	const int Window_Heigth = 640;
-	int FrameBufferWidth = 0;
-	int FrameBufferHeigth = 0;
 
 			/* Create a windowed mode window and its OpenGL context */
 	GLFWwindow* Window = glfwCreateWindow(Window_Width, Window_Heigth, "Window", NULL, NULL);
@@ -36,7 +35,7 @@ int main(void) {
 
 	if (glewInit() != GLEW_OK)
 		return -1;
-		/* Rendering a triangule */
+
 	float vertices[] = {
 				/*Vertices*/		/*Colors*/		/*Texture1*/
 		 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    1.0f, 1.0f,		
@@ -54,12 +53,11 @@ int main(void) {
 	glBindVertexArray(VAO);
 
 		/*Vertex buffer object*/
-	unsigned int VBO;/*Vetex Buffer object ID*/
+	unsigned int VBO;
 
-	glGenBuffers(1, &VBO);/*Creates the Vertex Buffer object in the GPU*/
+	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices), vertices, GL_STATIC_DRAW);/*assigning the data to the GPU*/
-
+	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 
 	unsigned int EBO;
 	glGenBuffers(1, &EBO);
@@ -76,9 +74,20 @@ int main(void) {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-		/*Textres*/
-	
+	glBindVertexArray(0);
 
+	unsigned int VAO2;
+	glGenVertexArrays(1, &VAO2);
+	glBindVertexArray(VAO2);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+
+		/*Textres*/
 	unsigned int Texture1,Texture2;
 	glGenTextures(1, &Texture1);
 	glBindTexture(GL_TEXTURE_2D, Texture1); 
@@ -126,32 +135,61 @@ int main(void) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	
+
 	while (!glfwWindowShouldClose(Window)) {
 				/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.SetUniformFloat("scrol", mixValue);
+
+		glEnable(GL_DEPTH_TEST);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, Texture2);
 
-		shader.On();
-		glm::mat4 Trans = glm::mat4(1.0f);
-		Trans = glm::translate(Trans, glm::vec3(0.5f, -0.5f, 0.5f));
-		Trans = glm::rotate(Trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+		glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 view = glm::mat4(1.0f);
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-		shader.SetUniformMat4("Transform", Trans);
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 
-		glm::mat4 Trans2 = glm::mat4(1.0f);
-		Trans2 = glm::translate(Trans2, glm::vec3(0.5f, 0.5f, 0.5f));
-		Trans2 = glm::rotate(Trans2, (float)glfwGetTime(), glm::vec3(0.0, 0.0, -1.0));
-		shader.SetUniformMat4("Transform", Trans2);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+		shader.SetUniformMat4("view", view);
+		shader.SetUniformMat4("projection", proj);
+		shader.On();
+		glBindVertexArray(VAO2);
+
+
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			if (i % 3 == 0) {
+				angle = glfwGetTime() * 25.0f;
+			}
+			else if (i % 2 == 0) {
+				angle = glfwGetTime() * -50.0f;
+			}
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			shader.SetUniformMat4("model", model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+
+		//glm::mat4 Trans2 = glm::mat4(1.0f);
+		//Trans2 = glm::translate(Trans2, glm::vec3(0.5f, 0.5f, 0.5f));
+		//Trans2 = glm::rotate(Trans2, (float)glfwGetTime(), glm::vec3(0.0, 0.0, -1.0));
+		//shader.SetUniformMat4("Transform", Trans2);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		ProcessImput(Window);
 				/* Swap front and back buffers */
 		glfwSwapBuffers(Window);
@@ -174,13 +212,13 @@ void ProcessImput(GLFWwindow* window)
 		mixValue += 0.01f;
 		if (mixValue >= 1.0f)
 			mixValue = 1.0f;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	}else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
 		mixValue -= 0.01f;
 		if (mixValue <= 0.0f)
 			mixValue = 0.0f;
 	}
+
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
