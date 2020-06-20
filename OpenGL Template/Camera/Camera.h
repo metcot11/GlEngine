@@ -9,16 +9,17 @@
 	{
 		_Forward, _Backward, _Left, _Right
 	};
+	const float YAW			= -90.0f;
+	const float PITCH		= 0.0f;
+	const float SPEED		= 2.5f;
+	const float SENSITIVITY = 0.1f;
+	const float ZOOM		= 45.0f;
 
 class Camera
 {
 
 private:
-	const float YAW				= -90.0f;
-	const float PITCH			=  0.0f;
-	const float SPEED			=  2.5f;
-	const float SENSITIVITY		=  0.01f;
-	const float ZOOM			=  45.0f;
+
 
 	const bool constrainPitch	=  true;
 
@@ -36,13 +37,15 @@ private:
 	float MouseSensitivity;
 	float Zoom;
 public:
-
-
-	Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch, float movementspeed, float mousesensitivity);
-	Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
-	Camera(float posx, float posy, float posz, float upx, float upy, float upz, float yaw, float pitch);
-	Camera(float yaw, float pitch);
-	Camera();
+	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH ) 
+		: Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+	{
+		Position = position;
+		WorldUp = up;
+		Yaw = yaw;
+		Pitch = pitch;
+		UpdateCameraVec();
+	}
 	
 
 	void ProcessKeyBoard(Movement MoveStats, float Delta);

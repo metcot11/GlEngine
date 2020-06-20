@@ -2,51 +2,6 @@
 
 
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch, float movementspeed, float mousesensitivity)
-	:Position(position), Up(up), Yaw(yaw), Pitch(pitch),
-	 MovementSpeed(SPEED),MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-{
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-}
-
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-	:Position(position), Up(up), Yaw(yaw), Pitch(pitch), 
-	 MovementSpeed(SPEED),MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-{
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	UpdateCameraVec();
-}
-
-Camera::Camera(float posx, float posy, float posz, float upx, float upy, float upz, float yaw, float pitch)
-	:Yaw(yaw), Pitch(pitch), MouseSensitivity(SENSITIVITY), MovementSpeed(SPEED), Zoom(ZOOM)
-{
-	Position = glm::vec3(posx, posy, posz);
-	Up = glm::vec3(upx, upy, upz);
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	UpdateCameraVec();
-}
-
-Camera::Camera(float yaw, float pitch)
-	:Yaw(yaw),Pitch(pitch), MouseSensitivity(SENSITIVITY), MovementSpeed(SPEED), Zoom(ZOOM)
-{
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	Position = glm::vec3(0.0f, 0.0f, 3.0f);
-	Up = glm::vec3(0.0f, 1.0f, 0.0f);
-	UpdateCameraVec();
-}
-
-Camera::Camera()
-	:Yaw(YAW), Pitch(PITCH), MouseSensitivity(SENSITIVITY), MovementSpeed(SPEED), Zoom(ZOOM)
-{
-	Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	Position = glm::vec3(0.0f, 0.0f, 3.0f);
-	Up = glm::vec3(0.0f, 1.0f, 0.0f);
-	UpdateCameraVec();
-}
-
-
-
-
 void Camera::ProcessKeyBoard(Movement MoveStats, float Delta)
 {
 	float velocity = MovementSpeed * Delta;
