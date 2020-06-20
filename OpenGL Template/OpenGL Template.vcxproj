@@ -131,11 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BufferObject.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BufferObject.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="vertices.h" />

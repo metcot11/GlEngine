@@ -8,6 +8,7 @@
 #include"Textures/Texture Loader/stb_image.h"
 #include "Shader.h"
 #include "Camera/Camera.h"
+#include "BufferObject.h"
 
 #include "vertices.h"
 
@@ -66,43 +67,32 @@ int main(void) {
 		1, 2, 3 
 	};
 
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	BufferObject buffer;
 
-	unsigned int VBO;
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-
-	unsigned int EBO;
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	buffer.CreateVertexArrayBuffer("VAO");
+	buffer.BindVertexArrayBuffer("VAO");
 
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	buffer.CreateVertexBuffer(sizeof(vertices2), vertices2, "Cube");
+	buffer.BindVertexBuffer("Cube");
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	buffer.CreateElementBuffer(sizeof(indices), indices, "Indices");
+	buffer.BindElementBuffer("Indices");
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
-	glBindVertexArray(0);
+	buffer.AttribPointer(0, 3, GL_FLOAT, 8, 0);
+	buffer.AttribPointer(1, 3, GL_FLOAT, 8, 3);
+	buffer.AttribPointer(2, 2, GL_FLOAT, 8, 6);
 
-	unsigned int VAO2;
-	glGenVertexArrays(1, &VAO2);
-	glBindVertexArray(VAO2);
+	buffer.UnBindVertexArrayBuffer();
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	buffer.CreateVertexArrayBuffer("VAO2");
+	buffer.BindVertexArrayBuffer("VAO2");
 
-	glBindVertexArray(0);
+	buffer.AttribPointer(0, 3, GL_FLOAT, 5, 0);
+	buffer.AttribPointer(1, 2, GL_FLOAT, 5, 3);
+
+	buffer.UnBindVertexArrayBuffer();
 
 
 	unsigned int Texture1,Texture2;
@@ -178,7 +168,8 @@ int main(void) {
 		shader.SetUniformMat4("view", view);
 		shader.SetUniformMat4("projection", proj);
 		shader.On();
-		glBindVertexArray(VAO2);
+
+		buffer.BindVertexArrayBuffer("VAO2");
 
 
 		for (unsigned int i = 0; i < 10; i++)
@@ -204,9 +195,9 @@ int main(void) {
 				/* Poll for and process events */
 		glfwPollEvents();
 	}
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	//glDeleteVertexArrays(1, &VAO);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &EBO);
 	glfwTerminate();
 }
 
