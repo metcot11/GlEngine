@@ -55,24 +55,66 @@ void BufferObject::CreateVertexArrayBuffer(const char* Id)
 
 void BufferObject::Bind(const char* EBO, const char* VBO, const char* VAO)
 {
-	glBindVertexArray(VertexArrayObjectId[VAO]);
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObjectId[VBO]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObjectId[EBO]);
+	if (VertexArrayObjectId.find(VAO) == VertexArrayObjectId.end())
+	{
+		std::cout << "Vertex Array not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindVertexArray(VertexArrayObjectId[VAO]);
+	}
+	if (VertexBufferObjectId.find(VBO) == VertexBufferObjectId.end())
+	{
+		std::cout << "Vertex Buffer not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObjectId[VBO]);
+	}
+	if (ElementBufferObjectId.find(EBO) == ElementBufferObjectId.end())
+	{
+		std::cout << "Element Buffer not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObjectId[EBO]);
+	}
 }
 
 void BufferObject::BindVertexBuffer(const char* VBO)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObjectId[VBO]);
+	if (VertexBufferObjectId.find(VBO) == VertexBufferObjectId.end())
+	{
+		std::cout << "Vertex Buffer not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObjectId[VBO]);
+	}
 }
 
 void BufferObject::BindElementBuffer(const char* EBO)
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObjectId[EBO]);
+	if (ElementBufferObjectId.find(EBO) == ElementBufferObjectId.end())
+	{
+		std::cout << "Element Buffer not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObjectId[EBO]);
+	}
 }
 
 void BufferObject::BindVertexArrayBuffer(const char* VAO)
 {
-	glBindVertexArray(VertexArrayObjectId[VAO]);
+	if (VertexArrayObjectId.find(VAO) == VertexArrayObjectId.end())
+	{
+		std::cout << "Vertex Array not found!" << '\n';
+		__debugbreak();
+	}
+	else {
+		glBindVertexArray(VertexArrayObjectId[VAO]);
+	}
 }
 
 void BufferObject::UnBind()
