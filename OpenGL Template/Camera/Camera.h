@@ -14,11 +14,13 @@ class Camera
 {
 
 private:
-	const float YAW			= -90.0f;
-	const float PITCH		=  0.0f;
-	const float SPEED		=  2.5f;
-	const float SENSITIVITY =  0.1f;
-	const float ZOOM		=  45.0f;
+	const float YAW				= -90.0f;
+	const float PITCH			=  0.0f;
+	const float SPEED			=  2.5f;
+	const float SENSITIVITY		=  0.01f;
+	const float ZOOM			=  45.0f;
+
+	const bool constrainPitch	=  true;
 
 	glm::vec3 Position;
 	glm::vec3 Front;
@@ -26,8 +28,6 @@ private:
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
 
-	float lastX = 800 / 2;
-	float lastY = 600 / 2;
 
 	float Yaw;
 	float Pitch;
@@ -35,8 +35,6 @@ private:
 	float MovementSpeed;
 	float MouseSensitivity;
 	float Zoom;
-	bool FirstMouse;
-
 public:
 
 
@@ -48,7 +46,7 @@ public:
 	
 
 	void ProcessKeyBoard(Movement MoveStats, float Delta);
-	void ProcessMouse(GLFWwindow* window, float Xpos, float Ypos, bool constrainPitch);
+	void ProcessMouse(float Xoffset, float Yoffset);
 	void ProcessMouseScroll(float Yoffset);
 	float Fov();
 	glm::mat4 GetViewMatrix();

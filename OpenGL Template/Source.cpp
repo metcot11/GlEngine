@@ -14,31 +14,26 @@
 #include <math.h>
 #include <iostream>
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-float deltaTime = 0.0f;	
-float lastFrame = 0.0f;
-
-float yaw = -90.0f;
-float pitch = 0.0f;
-float Fov = 45.0f;
-float lastX = 800 / 2;
-float lastY = 600 / 2;
-
-bool firstMouse = true;
-
 void ProcessImput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos);
 void scroll_CallBack(GLFWwindow* window, double xoffset, double yoffset);
 
-float mixValue = 0.2f;
 const int Window_Width = 1240;
 const int Window_Heigth = 640;
 int FrameBufferWidth = 0;
 int FrameBufferHeigth = 0;
+
+Camera Mouse;
+float deltaTime = 0.0f;	
+float lastFrame = 0.0f;
+
+float lastX = Window_Width / 2.0f;
+float lastY = Window_Heigth / 2.0f;
+
+bool firstMouse = true;
+
+float mixValue = 0.2f;
 
 int main(void) {
 
@@ -162,6 +157,10 @@ int main(void) {
 				/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		shader.SetUniformFloat("scrol", mixValue);
 
 		glEnable(GL_DEPTH_TEST);
@@ -171,14 +170,9 @@ int main(void) {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, Texture2);
 
-		glm::mat4 proj = glm::perspective(glm::radians(Fov), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+		glm::mat4 proj = glm::perspective(glm::radians(Mouse.Fov()), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
+		
+		glm::mat4 view = Mouse.GetViewMatrix();;
 
 	
 		shader.SetUniformMat4("view", view);
@@ -193,10 +187,10 @@ int main(void) {
 			model = glm::translate(model, cubePositions[i]);
 			float angle = 20.0f * i;
 			if (i % 3 == 0) {
-				angle = glfwGetTime() * 25.0f;
+				angle = (float)glfwGetTime() * 25.0f;
 			}
 			else if (i % 2 == 0) {
-				angle = glfwGetTime() * -50.0f;
+				angle = (float)glfwGetTime() * -50.0f;
 			}
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			shader.SetUniformMat4("model", model);
@@ -209,9 +203,6 @@ int main(void) {
 		glfwSwapBuffers(Window);
 				/* Poll for and process events */
 		glfwPollEvents();
-		float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 	}
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
@@ -236,16 +227,15 @@ void ProcessImput(GLFWwindow* window)
 			mixValue = 0.0f;
 	}
 
-	float cameraSpeed = 2.5f * deltaTime;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPos += cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPos -= cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		Mouse.ProcessKeyBoard(_Forward, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		Mouse.ProcessKeyBoard(_Backward, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		Mouse.ProcessKeyBoard(_Left, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		Mouse.ProcessKeyBoard(_Right, deltaTime);
 
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -255,43 +245,21 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos)
 {
-	if (firstMouse) // initially set to true
+	if (firstMouse)
 	{
 		lastX = xPos;
 		lastY = yPos;
 		firstMouse = false;
 	}
-
 	
 	float XOffSet = xPos - lastX;
 	float YOffSet = lastY - yPos;
 	lastX = xPos;
 	lastY = yPos;
 
-	const float Sensitivity = 0.1f;
-	XOffSet *= Sensitivity;
-	YOffSet *= Sensitivity;
-
-	yaw	  += XOffSet;
-	pitch += YOffSet;
-
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 Direction;
-	Direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	Direction.y = sin(glm::radians(pitch));
-	Direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(Direction);
-
+	Mouse.ProcessMouse(XOffSet, YOffSet);
 }
 void scroll_CallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
-	Fov -= (float)yoffset;
-	if (Fov < 1.0f)
-		Fov = 1.0f;
-	if (Fov > 45.0f)
-		Fov = 45.0f;
+	Mouse.ProcessMouseScroll(yoffset);
 }
