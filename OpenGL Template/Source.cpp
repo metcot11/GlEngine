@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include"Textures/Texture Loader/stb_image.h"
+#include "Textures/Texture Loader/stb_image.h"
 #include "Shader.h"
 #include "Camera/Camera.h"
 #include "BufferObject.h"
@@ -72,13 +72,11 @@ int main(void) {
 	buffer.CreateVertexArrayBuffer("VAO");
 	buffer.BindVertexArrayBuffer("VAO");
 
-
 	buffer.CreateVertexBuffer(sizeof(vertices2), vertices2, "Cube");
 	buffer.BindVertexBuffer("Cube");
 
 	buffer.CreateElementBuffer(sizeof(indices), indices, "Indices");
 	buffer.BindElementBuffer("Indices");
-
 
 	buffer.AttribPointer(0, 3, GL_FLOAT, 8, 0);
 	buffer.AttribPointer(1, 3, GL_FLOAT, 8, 3);
@@ -95,15 +93,17 @@ int main(void) {
 	buffer.UnBindVertexArrayBuffer();
 
 
+
+
 	unsigned int Texture1,Texture2;
 	glGenTextures(1, &Texture1);
 	glBindTexture(GL_TEXTURE_2D, Texture1); 
-
+	
 	
 	int width, height, nrChannels;
 	unsigned char* text = stbi_load("Textures/container.jpg", &width, &height, &nrChannels, 0);
 	stbi_set_flip_vertically_on_load(true);
-
+	
 	if (text)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, text);
@@ -113,20 +113,21 @@ int main(void) {
 	{
 		std::cout << "Failed to load texture1" << std::endl;
 	}
-
+	
 	glGenTextures(1, &Texture2);
 	glBindTexture(GL_TEXTURE_2D, Texture2);
-
+	
 	text = stbi_load("Textures/awesomeface.png", &width, &height, &nrChannels, 0);
 	if (text) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, text);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(text);
 	}
 	else {
 		std::cout << "Failed to load texture2" << '\n';
 	}
+	
 
-	stbi_image_free(text);
 
 
 	Shader shader("Shader/Fragment Shader.Shader", "Shader/Vertex Shader.Shader");
@@ -155,10 +156,12 @@ int main(void) {
 
 		glEnable(GL_DEPTH_TEST);
 
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, Texture2);
+
 
 		glm::mat4 proj = glm::perspective(glm::radians(Mouse.Fov()), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
 		
@@ -195,9 +198,6 @@ int main(void) {
 				/* Poll for and process events */
 		glfwPollEvents();
 	}
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
 	glfwTerminate();
 }
 
