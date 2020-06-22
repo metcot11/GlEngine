@@ -5,12 +5,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Textures/Texture Loader/stb_image.h"
+#include "stb.h"
 #include "Shader.h"
 #include "Camera/Camera.h"
 #include "BufferObject.h"
+#include "Renderer/Renderer.h"
 
-#include "vertices.h"
+#include "data.h"
 
 #include <math.h>
 #include <iostream>
@@ -20,8 +21,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos);
 void scroll_CallBack(GLFWwindow* window, double xoffset, double yoffset);
 
-const int Window_Width = 1240;
-const int Window_Heigth = 640;
+static const int Window_Width = 1240;
+static const int Window_Heigth = 640;
 int FrameBufferWidth = 0;
 int FrameBufferHeigth = 0;
 
@@ -54,45 +55,6 @@ int main(void) {
 
 	if (glewInit() != GLEW_OK)
 		return -1;
-
-	float vertices[] = {
-				/*Vertices*/		/*Colors*/		/*Texture1*/
-		 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    1.0f, 1.0f,		
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f
-	};
-	unsigned int indices[] = {
-		0, 1, 3,
-		1, 2, 3 
-	};
-
-	BufferObject buffer;
-
-	buffer.CreateVertexArrayBuffer("VAO");
-	buffer.BindVertexArrayBuffer("VAO");
-
-	buffer.CreateVertexBuffer(sizeof(vertices2), vertices2, "Cube");
-	buffer.BindVertexBuffer("Cube");
-
-	buffer.CreateElementBuffer(sizeof(indices), indices, "Indices");
-	buffer.BindElementBuffer("Indices");
-
-	buffer.AttribPointer(0, 3, GL_FLOAT, 8, 0);
-	buffer.AttribPointer(1, 3, GL_FLOAT, 8, 3);
-	buffer.AttribPointer(2, 2, GL_FLOAT, 8, 6);
-
-	buffer.UnBindVertexArrayBuffer();
-
-	buffer.CreateVertexArrayBuffer("VAO2");
-	buffer.BindVertexArrayBuffer("VAO2");
-
-	buffer.AttribPointer(0, 3, GL_FLOAT, 5, 0);
-	buffer.AttribPointer(1, 2, GL_FLOAT, 5, 3);
-
-	buffer.UnBindVertexArrayBuffer();
-
-
 
 
 	unsigned int Texture1,Texture2;
@@ -135,7 +97,8 @@ int main(void) {
 
 	shader.SetUniformInt("mTexture1", 0);
 	shader.SetUniformInt("mTexture2", 1);
-	
+	Renderer R(shader, Mouse);
+	R.GenCube(vertices2, sizeof(vertices2), indices, sizeof(indices));
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -143,12 +106,13 @@ int main(void) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
 	while (!glfwWindowShouldClose(Window)) {
 				/* Render here */
+		glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float currentFrame = glfwGetTime();
+		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -156,42 +120,38 @@ int main(void) {
 
 		glEnable(GL_DEPTH_TEST);
 
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, Texture2);
 
 
-		glm::mat4 proj = glm::perspective(glm::radians(Mouse.Fov()), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
-		
-		glm::mat4 view = Mouse.GetViewMatrix();;
-
-	
-		shader.SetUniformMat4("view", view);
-		shader.SetUniformMat4("projection", proj);
-		shader.On();
-
-		buffer.BindVertexArrayBuffer("VAO2");
-
-
-		for (unsigned int i = 0; i < 10; i++)
+		//glm::mat4 proj = glm::perspective(glm::radians(Mouse.Fov()), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
+		//
+		//glm::mat4 view = Mouse.GetViewMatrix();
+		//
+		//
+		//shader.SetUniformMat4("view", view);
+		//shader.SetUniformMat4("projection", proj);
+		//shader.On();
+		//
+		//buffer.BindVertexArrayBuffer("VAO2");
+		//
+		//
+		//for (unsigned int i = 0; i < 11; i++)
+		//{
+		//	glm::mat4 model = glm::mat4(1.0f);
+		//	model = glm::translate(model, cubePositions[i]);
+		//	float angle = 20.0f  * i;
+		//	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//	shader.SetUniformMat4("model", model);
+		//
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}	
+		for (int i = 0; i < 11; i++)
 		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			if (i % 3 == 0) {
-				angle = (float)glfwGetTime() * 25.0f;
-			}
-			else if (i % 2 == 0) {
-				angle = (float)glfwGetTime() * -50.0f;
-			}
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			shader.SetUniformMat4("model", model);
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}		
-
+			R.RenderRotatingCube(cubePositions[i], currentFrame);
+		}
 		ProcessImput(Window);
 				/* Swap front and back buffers */
 		glfwSwapBuffers(Window);
@@ -238,19 +198,19 @@ void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos)
 {
 	if (firstMouse)
 	{
-		lastX = xPos;
-		lastY = yPos;
+		lastX = (float)xPos;
+		lastY = (float)yPos;
 		firstMouse = false;
 	}
 	
-	float XOffSet = xPos - lastX;
-	float YOffSet = lastY - yPos;
-	lastX = xPos;
-	lastY = yPos;
+	float XOffSet = (float)xPos - lastX;
+	float YOffSet = lastY - (float)yPos;
+	lastX = (float)xPos;
+	lastY = (float)yPos;
 
 	Mouse.ProcessMouse(XOffSet, YOffSet);
 }
 void scroll_CallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
-	Mouse.ProcessMouseScroll(yoffset);
+	Mouse.ProcessMouseScroll((float)yoffset);
 }

@@ -76,8 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,8 +104,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,14 +133,17 @@
   <ItemGroup>
     <ClCompile Include="BufferObject.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferObject.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="vertices.h" />
+    <ClInclude Include="stb.h" />
+    <ClInclude Include="data.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

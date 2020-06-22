@@ -2,6 +2,7 @@
 
 
 Shader::Shader(const char* pathFragmShader, const char* pathVertShader)
+	:FragId(0), VertId(0)
 {
 	std::fstream fileFrag(pathFragmShader);
 	std::fstream fileVert(pathVertShader);
