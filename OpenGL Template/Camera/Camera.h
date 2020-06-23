@@ -4,21 +4,23 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Shader.h"
 
 	enum Movement
 	{
 		_Forward, _Backward, _Left, _Right
 	};
 
-const float YAW			= -90.0f;
-const float PITCH		= 0.0f;
-const float SPEED		= 2.5f;
-const float SENSITIVITY = 0.1f;
-const float ZOOM		= 45.0f;
-
 class Camera
 {
-
+public:
+	const float YAW			= -90.0f;
+	const float PITCH		= 0.0f;
+	const float SPEED		= 2.5f;
+	const float SENSITIVITY = 0.1f;
+	const float ZOOM		= 45.0f;
+	const int Window_Width  = 1240;
+	const int Window_Heigth = 640;
 private:
 	const bool constrainPitch	=  true;
 
@@ -35,11 +37,13 @@ private:
 	float MouseSensitivity;
 	float Zoom;
 public:
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+	Camera();
 
 	void ProcessKeyBoard(Movement MoveStats, float Delta);
 	void ProcessMouse(float Xoffset, float Yoffset);
 	void ProcessMouseScroll(float Yoffset);
+
+	void UpdateView(Shader shade);
 
 	float Fov();
 

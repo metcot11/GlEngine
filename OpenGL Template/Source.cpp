@@ -5,10 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "stb.h"
 #include "Shader.h"
-#include "Camera/Camera.h"
 #include "BufferObject.h"
+#include "Textures/Texture.h"
+#include "Camera/Camera.h"
 #include "Renderer/Renderer.h"
 
 #include "data.h"
@@ -26,7 +26,7 @@ static const int Window_Heigth = 640;
 int FrameBufferWidth = 0;
 int FrameBufferHeigth = 0;
 
-Camera Mouse;
+Camera camera;
 float deltaTime = 0.0f;	
 float lastFrame = 0.0f;
 
@@ -57,58 +57,24 @@ int main(void) {
 		return -1;
 
 
-	unsigned int Texture1,Texture2;
-	glGenTextures(1, &Texture1);
-	glBindTexture(GL_TEXTURE_2D, Texture1); 
-	
-	
-	int width, height, nrChannels;
-	unsigned char* text = stbi_load("Textures/container.jpg", &width, &height, &nrChannels, 0);
-	stbi_set_flip_vertically_on_load(true);
-	
-	if (text)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, text);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture1" << std::endl;
-	}
-	
-	glGenTextures(1, &Texture2);
-	glBindTexture(GL_TEXTURE_2D, Texture2);
-	
-	text = stbi_load("Textures/awesomeface.png", &width, &height, &nrChannels, 0);
-	if (text) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, text);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		stbi_image_free(text);
-	}
-	else {
-		std::cout << "Failed to load texture2" << '\n';
-	}
-	
-
-
 
 	Shader shader("Shader/Fragment Shader.Shader", "Shader/Vertex Shader.Shader");
 	shader.On();
 
-	shader.SetUniformInt("mTexture1", 0);
-	shader.SetUniformInt("mTexture2", 1);
-	Renderer R(shader, Mouse);
+	Texture tex(shader);
+	tex.CreateTexture2D("Textures/Tex_images/container.jpg", "Conteiner", GL_RGB);
+	tex.CreateTexture2D("Textures/Tex_images/awesomeface.png", "Face", GL_RGBA);
+
+
+	Renderer R(shader, camera);
 	R.GenCube(vertices2, sizeof(vertices2), indices, sizeof(indices));
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	while (!glfwWindowShouldClose(Window)) {
 				/* Render here */
 		glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+		shader.On();
+		camera.UpdateView(shader);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -120,34 +86,9 @@ int main(void) {
 
 		glEnable(GL_DEPTH_TEST);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, Texture2);
+		tex.BindTexture2D("Conteiner", 0);
+		tex.BindTexture2D("Face", 1);
 
-
-		//glm::mat4 proj = glm::perspective(glm::radians(Mouse.Fov()), (float)Window_Width / (float)Window_Heigth, 0.1f, 100.0f);
-		//
-		//glm::mat4 view = Mouse.GetViewMatrix();
-		//
-		//
-		//shader.SetUniformMat4("view", view);
-		//shader.SetUniformMat4("projection", proj);
-		//shader.On();
-		//
-		//buffer.BindVertexArrayBuffer("VAO2");
-		//
-		//
-		//for (unsigned int i = 0; i < 11; i++)
-		//{
-		//	glm::mat4 model = glm::mat4(1.0f);
-		//	model = glm::translate(model, cubePositions[i]);
-		//	float angle = 20.0f  * i;
-		//	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//	shader.SetUniformMat4("model", model);
-		//
-		//	glDrawArrays(GL_TRIANGLES, 0, 36);
-		//}	
 		for (int i = 0; i < 11; i++)
 		{
 			R.RenderRotatingCube(cubePositions[i], currentFrame);
@@ -178,22 +119,19 @@ void ProcessImput(GLFWwindow* window)
 			mixValue = 0.0f;
 	}
 
-	
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		Mouse.ProcessKeyBoard(_Forward, deltaTime);
+		camera.ProcessKeyBoard(_Forward, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		Mouse.ProcessKeyBoard(_Backward, deltaTime);
+		camera.ProcessKeyBoard(_Backward, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		Mouse.ProcessKeyBoard(_Left, deltaTime);
+		camera.ProcessKeyBoard(_Left, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		Mouse.ProcessKeyBoard(_Right, deltaTime);
-
+		camera.ProcessKeyBoard(_Right, deltaTime);
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
-
 void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos)
 {
 	if (firstMouse)
@@ -208,9 +146,9 @@ void Mouse_CallBack(GLFWwindow* window, double xPos, double yPos)
 	lastX = (float)xPos;
 	lastY = (float)yPos;
 
-	Mouse.ProcessMouse(XOffSet, YOffSet);
+	camera.ProcessMouse(XOffSet, YOffSet);
 }
 void scroll_CallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
-	Mouse.ProcessMouseScroll((float)yoffset);
+	camera.ProcessMouseScroll((float)yoffset);
 }

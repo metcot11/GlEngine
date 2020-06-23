@@ -30,6 +30,9 @@
     <ClCompile Include="Renderer\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Textures\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -41,13 +44,16 @@
     <ClInclude Include="BufferObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures\stb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

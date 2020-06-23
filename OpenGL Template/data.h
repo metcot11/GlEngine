@@ -13,6 +13,17 @@ glm::vec3 cubePositions[] = {
 	glm::vec3(-1.3f,  5.0f, -2.5f ),
 	glm::vec3(-4.3f,  7.0f, -10.5f)
 };
+float vertices[] = {
+	/*Vertices*/		/*Colors*/		/*Texture1*/
+	 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
+	-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+	-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f
+};
+unsigned int indices[] = {
+	0, 1, 3,
+	1, 2, 3
+};
 float vertices2[] = {
 	/*veticies*/		/*Texture*/
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -56,15 +67,4 @@ float vertices2[] = {
 	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-float vertices[] = {
-	/*Vertices*/		/*Colors*/		/*Texture1*/
-	 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
-	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f,
-	-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-	-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f
-};
-unsigned int indices[] = {
-	0, 1, 3,
-	1, 2, 3
 };

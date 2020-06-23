@@ -17,15 +17,16 @@ private:
 	BufferObject Buffer;
 	Shader Shade;
 	Camera& Mouse;
-
-	const int Window_Width = 1240, Window_Heigth = 640;
 public:
 	Renderer(Shader s, Camera& m);
 	~Renderer();
 
 	void GenCube(float* Vertices, int Datasize, unsigned int* Indices, int Indsize);
-	void RenderCube(glm::vec3 Pos);
 
+	void RenderCube(glm::vec3 Pos);
 	void RenderRotatingCube(glm::vec3 Pos, float angle);
+
+	void GenSquare(float* Vertices, int Datasize, unsigned int* Indices, int Indsize);
+	void RenderSquare(glm::vec3 Pos);
 };
 

@@ -2,13 +2,14 @@
 
 
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-	: Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+Camera::Camera()
+	: MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-	Position = position;
-	WorldUp = up;
-	Yaw = yaw;
-	Pitch = pitch;
+	Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	Front = glm::vec3(0.0f, 0.0f, -1.0f);
+	Yaw = YAW;
+	Pitch = PITCH;
 	UpdateCameraVec();
 }
 
@@ -55,6 +56,15 @@ void Camera::ProcessMouseScroll(float Yoffset)
 		Zoom = 1.0f;
 	if (Zoom > 45.0f)
 		Zoom = 45.0f;
+}
+
+void Camera::UpdateView(Shader shade)
+{
+	glm::mat4 proj = glm::perspective(glm::radians(Zoom),(float) Window_Width /(float) Window_Heigth, 0.1f, 100.0f);
+	glm::mat4 view = glm::lookAt(Position, Position + Front, Up);
+
+	shade.SetUniformMat4("view", view);
+	shade.SetUniformMat4("projection", proj);
 }
 
 float Camera::Fov()
