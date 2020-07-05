@@ -4,72 +4,73 @@
 Renderer::Renderer(Shader s, Camera& m)
 	:Shade(s), Mouse(m)
 {
+	Buffer.CreateVertexBuffer(sizeof(vertices), vertices, BufferDataId);
 }
 
 Renderer::~Renderer()
 {
 }
 
-void Renderer::GenCube(float* Vertices, int Datasize, unsigned int* Indices, int Indsize )
+void Renderer::GenCube(const char* CubeId)
 {
-	Buffer.CreateVertexBuffer(Datasize, Vertices, "Cube");
-	Buffer.BindVertexBuffer("Cube");
-
-	Buffer.CreateElementBuffer(Indsize, Indices, "IndCube");
-	Buffer.BindElementBuffer("IndCube");
-
-	Buffer.CreateVertexArrayBuffer("VaoCube");
-	Buffer.BindVertexArrayBuffer("VaoCube");
-	Buffer.AttribPointer(0, 3, GL_FLOAT, 5, 0);
-	Buffer.AttribPointer(1, 2, GL_FLOAT, 5, 3);
-
-	Buffer.UnBindVertexArrayBuffer();
-}
-
-void Renderer::RenderCube(glm::vec3 Pos)
-{
-	Buffer.BindVertexArrayBuffer("VaoCube");
-
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, Pos);
-	model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-	Shade.SetUniformMat4("model", model);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-
-void Renderer::RenderRotatingCube(glm::vec3 Pos, float angle)
-{
-	Buffer.BindVertexArrayBuffer("VaoCube");
-
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, Pos);
-	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-	Shade.SetUniformMat4("model", model);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-
-void Renderer::GenSquare(float* Vertices, int Datasize, unsigned int* Indices, int Indsize)
-{
-	Buffer.CreateVertexBuffer(Datasize, Vertices, "square");
-	Buffer.BindVertexBuffer("square");
-
-	Buffer.CreateElementBuffer(Indsize, Indices, "Indsquare");
-	Buffer.BindElementBuffer("Indsquare");
-
-	Buffer.CreateVertexArrayBuffer("Vaosquare");
-	Buffer.BindVertexArrayBuffer("Vaosquare");
-
+	Buffer.CreateVertexArrayBuffer(CubeId);
+	Buffer.BindVertexArrayBuffer(CubeId);
+	Buffer.BindVertexBuffer(BufferDataId);
 	Buffer.AttribPointer(0, 3, GL_FLOAT, 8, 0);
-	Buffer.AttribPointer(0, 3, GL_FLOAT, 8, 3);
-	Buffer.AttribPointer(0, 3, GL_FLOAT, 8, 6);
-
+	Buffer.AttribPointer(1, 3, GL_FLOAT, 8, 3);
+	Buffer.AttribPointer(2, 2, GL_FLOAT, 8, 6);
+	Buffer.UnBindVertexBuffer();
 	Buffer.UnBindVertexArrayBuffer();
 }
 
-void Renderer::RenderSquare(glm::vec3 Pos)
+void Renderer::GenLightCube(const char* LightCubeId)
 {
-
+	Buffer.CreateVertexArrayBuffer(LightCubeId);
+	Buffer.BindVertexArrayBuffer(LightCubeId);
+	Buffer.BindVertexBuffer(BufferDataId);
+	Buffer.AttribPointer(0, 3, GL_FLOAT, 8, 0);
+	Buffer.UnBindVertexBuffer();
+	Buffer.UnBindVertexArrayBuffer();
 }
+
+void Renderer::GenTestScene1()
+{
+}
+
+void Renderer::RenderCube(glm::vec3 Pos, const char* CubeId, Shader s)
+{
+	s.On();
+	Buffer.BindVertexBuffer(BufferDataId);
+	Buffer.BindVertexArrayBuffer(CubeId);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, Pos);
+	glm::mat3 Trans_Normal = glm::inverse(glm::transpose(model));
+
+	s.SetUniformMat4("model", model);
+	s.SetUniformMat3("Trans_Normal", Trans_Normal);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	Buffer.UnBindVertexBuffer();
+	Buffer.UnBindVertexArrayBuffer();
+	s.Off();
+}
+
+void Renderer::RenderLightCube(glm::vec3 Pos, const char* LightCubeId, Shader s, PointLight pointLight)
+{
+	s.On();
+	Buffer.BindVertexBuffer(BufferDataId);
+	Buffer.BindVertexArrayBuffer(LightCubeId);
+
+	pointLight.RenderPntLight(Pos, s);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, Pos);
+	model = glm::scale(model, glm::vec3(0.2f));
+	s.SetUniformMat4("model", model);
+	s.SetUniformVec3("color", pointLight.ambient);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	Buffer.UnBindVertexBuffer();
+	Buffer.UnBindVertexArrayBuffer();
+	s.Off();
+}
+
 

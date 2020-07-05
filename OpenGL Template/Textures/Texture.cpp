@@ -3,8 +3,8 @@
 #include "stb.h"
 #include <string>
 
-Texture::Texture(Shader s)
-	:shade(s)
+Texture::Texture()
+	:TextureId(0), textureName("texture")
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -13,8 +13,8 @@ Texture::Texture(Shader s)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-Texture::Texture(Shader s, const char* filePath, const char* Id, GLenum format)
-	:shade(s)
+Texture::Texture(const char* filePath, const char* Name)
+	:textureName(Name)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -23,17 +23,23 @@ Texture::Texture(Shader s, const char* filePath, const char* Id, GLenum format)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	unsigned int texture;
-	int width, height, nrChannels;
+	int width, height, nrChannels = 0;
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	TextureMap.insert({ Id, texture });
+	TextureId = texture;
 
 
 	unsigned char* Data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-	stbi_set_flip_vertically_on_load(true);
 	if (Data)
 	{
+		GLenum format = GL_RGB;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -50,19 +56,25 @@ Texture::~Texture()
 {
 }
 
-void Texture::CreateTexture2D(const char* filePath, const char* Id, GLenum format)
+void Texture::LoadTexture2D(const char* filePath)
 {
 	unsigned int texture;
 	int width, height, nrChannels;
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	TextureMap.insert({ Id, texture });
+	TextureId = texture;
 
 	unsigned char* Data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-	stbi_set_flip_vertically_on_load(true);
 	if (Data)
 	{
+		GLenum format = GL_RGB;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -74,10 +86,14 @@ void Texture::CreateTexture2D(const char* filePath, const char* Id, GLenum forma
 	stbi_image_free(Data);
 }
 
-void Texture::BindTexture2D(const char* Id, int slot)
+void Texture::BindTexture2D(Shader shade, int slot)
 {
-	std::string tex = "mTexture" + std::to_string(slot);
-	shade.SetUniformInt(tex.c_str(), slot);
+	shade.SetUniformInt(textureName, slot);
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, TextureMap[Id]);
+	glBindTexture(GL_TEXTURE_2D, TextureId);
+}
+
+void FlipTextures()
+{
+	stbi_set_flip_vertically_on_load(true);
 }

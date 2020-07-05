@@ -7,26 +7,29 @@
 
 #include "Shader.h"
 #include "BufferObject.h"
+#include "data.h"
 
+#include "Lighting.h"
 #include "Camera/Camera.h"
 
 class Renderer
 {
 private:
+	const char* BufferDataId;
 
 	BufferObject Buffer;
-	Shader Shade;
 	Camera& Mouse;
+	Shader Shade;
 public:
 	Renderer(Shader s, Camera& m);
 	~Renderer();
 
-	void GenCube(float* Vertices, int Datasize, unsigned int* Indices, int Indsize);
+	void GenCube(const char* CubeId);
+	void GenLightCube(const char* LightCubeId);
+	void GenTestScene1();
 
-	void RenderCube(glm::vec3 Pos);
-	void RenderRotatingCube(glm::vec3 Pos, float angle);
+	void RenderCube(glm::vec3 Pos, const char* CubeId, Shader s );
+	void RenderLightCube(glm::vec3 Pos, const char* LightCubeId, Shader s, PointLight p);
 
-	void GenSquare(float* Vertices, int Datasize, unsigned int* Indices, int Indsize);
-	void RenderSquare(glm::vec3 Pos);
 };
 

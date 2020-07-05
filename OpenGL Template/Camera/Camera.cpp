@@ -5,7 +5,7 @@
 Camera::Camera()
 	: MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-	Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	Position = glm::vec3(1.0f, 1.0f, 1.0f);
 	WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	Front = glm::vec3(0.0f, 0.0f, -1.0f);
 	Yaw = YAW;
@@ -51,7 +51,7 @@ void Camera::ProcessMouse(float Xoffset, float Yoffset)
 
 void Camera::ProcessMouseScroll(float Yoffset)
 {
-	Zoom -= (float)Yoffset;
+	Zoom -= Yoffset;
 	if (Zoom < 1.0f)
 		Zoom = 1.0f;
 	if (Zoom > 45.0f)
@@ -75,6 +75,11 @@ float Camera::Fov()
 glm::mat4 Camera::GetViewMatrix()
 {
 	return glm::lookAt(Position, Position + Front, Up);
+}
+
+glm::vec3 Camera::GetCameraPos()
+{
+	return Position;
 }
 
 void Camera::UpdateCameraVec()

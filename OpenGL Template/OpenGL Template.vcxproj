@@ -76,13 +76,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimap;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include;$(SolutionDir)Dependencies\Glew-2.1.0\include;$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLFW\lib-vc2019;$(SolutionDir)Libs\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimap\lib;$(SolutionDir)Libs\GLFW\lib-vc2019;$(SolutionDir)Libs\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,9 +91,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimap;$(SolutionDir)Dependencies\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)Dependencies\Glew-2.1.0\include;$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\glfw-3.3.2.bin.WIN64\include\GLFW</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimap\lib;$(SolutionDir)Libs\GLFW\lib-vc2019x64;$(SolutionDir)Libs\GLEW\lib\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,15 +108,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimap;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include;$(SolutionDir)Dependencies\Glew-2.1.0\include;$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\Glfw-3.3 WIN32\include\GLFW</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLFW\lib-vc2019;$(SolutionDir)Libs\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimap\lib;$(SolutionDir)Libs\GLFW\lib-vc2019;$(SolutionDir)Libs\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,16 +127,28 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\assimap;$(SolutionDir)Dependencies\glfw-3.3.2.bin.WIN64\include;$(SolutionDir)Dependencies\Glew-2.1.0\include;$(SolutionDir)OpenGL Template;$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\Glew-2.1.0\include\GL;$(SolutionDir)Dependencies\glfw-3.3.2.bin.WIN64\include\GLFW</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimap\lib;$(SolutionDir)Libs\GLFW\lib-vc2019x64;$(SolutionDir)Libs\GLEW\lib\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferObject.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="Lighting.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh\Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -141,6 +157,17 @@
   <ItemGroup>
     <ClInclude Include="BufferObject.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\stb_rect_pack.h" />
+    <ClInclude Include="ImGui\stb_textedit.h" />
+    <ClInclude Include="ImGui\stb_truetype.h" />
+    <ClInclude Include="Lighting.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh\Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Textures\stb.h" />

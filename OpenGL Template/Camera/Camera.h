@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 
-	enum Movement
+enum Movement
 	{
 		_Forward, _Backward, _Left, _Right
 	};
@@ -16,12 +16,12 @@ class Camera
 public:
 	const float YAW			= -90.0f;
 	const float PITCH		= 0.0f;
-	const float SPEED		= 2.5f;
+	const float SPEED		= 5.5f;
 	const float SENSITIVITY = 0.1f;
 	const float ZOOM		= 45.0f;
 	const int Window_Width  = 1240;
 	const int Window_Heigth = 640;
-private:
+
 	const bool constrainPitch	=  true;
 
 	glm::vec3 Position;
@@ -48,6 +48,7 @@ public:
 	float Fov();
 
 	glm::mat4 GetViewMatrix();
+	glm::vec3 GetCameraPos();
 private:
 	void UpdateCameraVec();
 };

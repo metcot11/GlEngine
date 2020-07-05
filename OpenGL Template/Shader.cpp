@@ -4,8 +4,17 @@
 Shader::Shader(const char* pathFragmShader, const char* pathVertShader)
 	:FragId(0), VertId(0)
 {
+
 	std::fstream fileFrag(pathFragmShader);
 	std::fstream fileVert(pathVertShader);
+	if (!fileFrag.is_open()) {
+		std::cout << "ERROR::SHADER_FRAGMENT::NOT_FOUND" << '\n';
+		return;
+	}
+	if (!fileVert.is_open()) {
+		std::cout << "ERROR::SHADER_VERTEX::NOT_FOUND" << '\n';
+		return;
+	}
 
 	std::string strFrag;
 	std::string strVert;
@@ -41,6 +50,17 @@ Shader::~Shader()
 	glDeleteShader(ShaderId);
 }
 
+void Shader::operator=(Shader s)
+{
+	ShaderId = s.ShaderId;
+	FragId   = s.FragId;
+	VertId   = s.VertId;
+
+	FragmentShader	= s.FragmentShader;
+	VertexShader	= s.VertexShader;
+
+}
+
 void Shader::On()
 {
 	glUseProgram(ShaderId);
@@ -66,9 +86,24 @@ void Shader::SetUniformBool(const char* UniformName, bool value)
 	glUniform1i(glGetUniformLocation(ShaderId, UniformName), (int)value);
 }
 
+void Shader::SetUniformVec3(const char* UniformName, float x, float y, float z )
+{
+	glUniform3f(glGetUniformLocation(ShaderId, UniformName), x, y, z);
+}
+
+void Shader::SetUniformVec3(const char* UniformName, glm::vec3 value)
+{
+	glUniform3f(glGetUniformLocation(ShaderId, UniformName), value.x, value.y, value.z);
+}
+
 void Shader::SetUniformVec4(const char* UniformName, float x, float y, float z, float t)
 {
 	glUniform4f(glGetUniformLocation(ShaderId, UniformName), x, y, z, t);
+}
+
+void Shader::SetUniformMat3(const char* UniformName, glm::mat3 value)
+{
+	glUniformMatrix3fv(glGetUniformLocation(ShaderId, UniformName), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::SetUniformMat4(const char* UniformName, glm::mat4 value)
