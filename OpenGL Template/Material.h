@@ -18,6 +18,7 @@ public:
 	Material(Material& mat);
 	Material();
 	~Material();
+
 	void operator=(Material& m);
 
 	void SetMaterial(glm::vec3 ambient, glm::vec3 difuse, glm::vec3 specular, float shininess);

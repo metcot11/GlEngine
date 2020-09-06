@@ -41,6 +41,40 @@ void Mesh::Draw(Shader& shader)
 
 	glActiveTexture(GL_TEXTURE0);
 }
+void Mesh::Draw(Shader& shader, glm::vec3 pos)
+{
+	unsigned int diffuseNr = 1;
+	unsigned int specularNr = 1;
+	unsigned int normalNr = 1;
+	unsigned int heightNr = 1;
+	for (unsigned int i = 0; i < mTextures.size(); i++)
+	{
+		std::string number;
+		std::string name = mTextures[i].Type;
+		if (name == "texture_diffuse")
+			number = std::to_string(diffuseNr++);
+		else if (name == "texture_specular")
+			number = std::to_string(specularNr);
+		else if (name == "texture_normal")
+			number = std::to_string(normalNr);
+		else if (name == "texture_heigth")
+			number = std::to_string(heightNr);
+
+		mTextures[i].textureName = ("material." + name + number).c_str();
+		mTextures[i].BindTexture2D(shader, i);
+	}
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, pos);
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.SetUniformMat4("model", model);
+
+	glActiveTexture(GL_TEXTURE0);
+}
 
 Mesh::~Mesh()
 {

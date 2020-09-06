@@ -21,6 +21,13 @@ namespace {
 		glm::vec3(-4.3f,  7.0f, -10.5f)
 
 	};
+	glm::vec3 glassPosition[] = {
+		glm::vec3( 1.0f, 0.01f,  2.0f),
+		glm::vec3( 3.0f, 0.01f,  1.5f),
+		glm::vec3( 3.5f, 0.01f,  1.0f),
+		glm::vec3( 4.0f, 0.01f, -1.0f),
+		glm::vec3(-2.0f, 0.01f, -2.0f)
+	};
 	float vertices[] = {
 		// positions          //normals           // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
@@ -65,5 +72,89 @@ namespace {
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 
+	};
+	float PlaneData[] = {
+		 //Vertices					//texture coord
+		 5.0f, -0.5f,  5.0f,		2.0f, 0.0f,
+		-5.0f, -0.5f,  5.0f,		0.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,		0.0f, 2.0f,
+
+		 5.0f, -0.5f,  5.0f,		2.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,		0.0f, 2.0f,
+		 5.0f, -0.5f, -5.0f,		2.0f, 2.0f
+	};
+	float transparentVertices[] = {
+		// positions				// texture Coords
+		0.0f,  0.5f,  0.0f,			 0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,			 0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,			 1.0f,  1.0f,
+
+		0.0f,  0.5f,  0.0f,			 0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,			 1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,			 1.0f,  0.0f
+	};
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+	float quadVertices2[] = { 
+		// positions   // texCoords
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		-0.3f,  0.7f,  0.0f, 0.0f,
+		 0.3f,  0.7f,  1.0f, 0.0f,
+
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		 0.3f,  0.7f,  1.0f, 0.0f,
+		 0.3f,  1.0f,  1.0f, 1.0f
+	};
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
 	};
 }

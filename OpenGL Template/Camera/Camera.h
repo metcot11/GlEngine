@@ -22,8 +22,6 @@ public:
 	const int Window_Width  = 1240;
 	const int Window_Heigth = 640;
 
-	const bool constrainPitch	=  true;
-
 	glm::vec3 Position;
 	glm::vec3 Front;
 	glm::vec3 Up;
@@ -40,7 +38,7 @@ public:
 	Camera();
 
 	void ProcessKeyBoard(Movement MoveStats, float Delta);
-	void ProcessMouse(float Xoffset, float Yoffset);
+	void ProcessMouse(float Xoffset, float Yoffset, bool constrainPitch = true);
 	void ProcessMouseScroll(float Yoffset);
 
 	void UpdateView(Shader shade);

@@ -61,6 +61,55 @@ void Shader::operator=(Shader s)
 
 }
 
+void Shader::UpdateVertexShader(const char* filepath)
+{
+	std::fstream fileVert(filepath);
+	if (!fileVert.is_open()) {
+		std::cout << "ERROR::SHADER_VERTEX::NOT_FOUND" << '\n';
+		return;
+	}
+	std::string strVert;
+
+	std::string line;
+	while (getline(fileVert, line)) {
+		strVert.append(line + '\n');
+	}
+	fileVert.close();
+
+	VertexShader = strVert.c_str();
+
+	CompileVertexShader();
+
+	glAttachShader(ShaderId, VertId);
+	glLinkProgram(ShaderId);
+
+	glDeleteShader(VertId);
+}
+
+void Shader::UpdateFragmentShader(const char* filepath)
+{
+	std::fstream fileFrag(filepath);
+	if (!fileFrag.is_open()) {
+		std::cout << "ERROR::SHADER_FRAGMENT::NOT_FOUND" << '\n';
+		return;
+	}
+	std::string strFrag;
+	std::string line;
+	while (getline(fileFrag, line)) {
+		strFrag.append(line + '\n');
+	}
+	fileFrag.close();
+
+	FragmentShader = strFrag.c_str();
+
+	CompileFragmentShader();
+
+	glAttachShader(ShaderId, FragId);
+	glLinkProgram(ShaderId);
+
+	glDeleteShader(FragId);
+}
+
 void Shader::On()
 {
 	glUseProgram(ShaderId);

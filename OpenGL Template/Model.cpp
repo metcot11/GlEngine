@@ -22,6 +22,17 @@ void Model::Draw(Shader& shader)
 		i.Draw(shader);
 }
 
+void Model::Draw(Shader& shader, glm::vec3 pos)
+{
+	for (auto i : vMeshes)
+		i.Draw(shader);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, pos);
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.SetUniformMat4("model", model);
+}
+
 void Model::LoadModel(std::string Path)
 {
 		/*Read File*/
@@ -138,7 +149,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
 			Texture texture;
 			std::string Filename = std::string(str.C_Str());
 			Filename = mDirectory + '/' + Filename;
-			texture.LoadTexture2D(Filename.c_str());
+			texture.LoadTexture2D(Filename.c_str(),0);
 			texture.Type = typeName;
 			texture.path = str.C_Str();
 

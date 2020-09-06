@@ -21,6 +21,8 @@ public:
 	~Model();
 
 	void Draw(Shader& shader);
+	void Draw(Shader& shader, glm::vec3 pos);
+
 private:
 	void LoadModel(std::string Path);
 	void ProcessNode(aiNode* node, const aiScene* scene);

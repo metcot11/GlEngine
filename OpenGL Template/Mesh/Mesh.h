@@ -33,6 +33,7 @@ public:
 	Mesh(std::vector<Vertex> ver, std::vector<unsigned int> ind, std::vector<Texture> tex);
 	~Mesh();
 	
+	void Draw(Shader& shader, glm::vec3 pos);
 	void Draw(Shader& shader);
 
 private:

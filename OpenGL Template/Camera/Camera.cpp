@@ -29,7 +29,7 @@ void Camera::ProcessKeyBoard(Movement MoveStats, float Delta)
 		Position += Right * velocity;
 }
 
-void Camera::ProcessMouse(float Xoffset, float Yoffset)
+void Camera::ProcessMouse(float Xoffset, float Yoffset, bool constrainPitch)
 {
 
 	Xoffset *= MouseSensitivity;
@@ -60,11 +60,13 @@ void Camera::ProcessMouseScroll(float Yoffset)
 
 void Camera::UpdateView(Shader shade)
 {
+	shade.On();
 	glm::mat4 proj = glm::perspective(glm::radians(Zoom),(float) Window_Width /(float) Window_Heigth, 0.1f, 100.0f);
 	glm::mat4 view = glm::lookAt(Position, Position + Front, Up);
 
 	shade.SetUniformMat4("view", view);
 	shade.SetUniformMat4("projection", proj);
+	shade.Off();
 }
 
 float Camera::Fov()

@@ -25,6 +25,9 @@ public:
 	
 	void operator=(Shader s);
 	
+	void UpdateVertexShader(const char* filepath);
+	void UpdateFragmentShader(const char* filepath);
+
 	void On();
 	void Off();
 

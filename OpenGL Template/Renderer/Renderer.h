@@ -7,6 +7,7 @@
 
 #include "Shader.h"
 #include "BufferObject.h"
+#include "Textures/Texture.h"
 #include "data.h"
 
 #include "Lighting.h"
@@ -15,20 +16,22 @@
 class Renderer
 {
 private:
-	const char* BufferDataId;
+	const char* CubeBufferDataId;
+	const char* PlaneBufferDataId;
 
 	BufferObject Buffer;
-	Camera& Mouse;
-	Shader Shade;
+	Camera& camera;
 public:
-	Renderer(Shader s, Camera& m);
+	Renderer(Camera& m);
 	~Renderer();
 
 	void GenCube(const char* CubeId);
 	void GenLightCube(const char* LightCubeId);
+	void GenPlane(const char* Id);
 	void GenTestScene1();
 
-	void RenderCube(glm::vec3 Pos, const char* CubeId, Shader s );
+	void RenderPlane(const char* Id, Shader s, Texture t);
+	void RenderCube(glm::vec3 Pos, const char* CubeId, Shader s, Texture t);
 	void RenderLightCube(glm::vec3 Pos, const char* LightCubeId, Shader s, PointLight p);
 
 };
