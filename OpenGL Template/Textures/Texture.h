@@ -21,15 +21,21 @@ public:
 	Texture(const char* filePath, const char* Name, bool flip);
 	~Texture();
 
+	void operator=(Texture t);
 	void LoadTexture2D(const char* filePath, bool flip);
 	void BindTexture2D(Shader shade, int slot);
+
+	void Bind();
+	void UnBind();
 };
 class CubeMap {
 public:
 	unsigned int CubeMapId;
 
 	CubeMap(std::vector<const char*> filePaths);
+	CubeMap();
 	~CubeMap();
 
+	void LoadTextures(std::vector<const char*> filePaths);
 	void BindCubeMap(Shader s, int slot);
 };

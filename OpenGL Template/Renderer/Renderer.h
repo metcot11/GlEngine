@@ -1,5 +1,6 @@
 #pragma once
 #include <glew.h>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,23 +17,34 @@
 class Renderer
 {
 private:
-	const char* CubeBufferDataId;
-	const char* PlaneBufferDataId;
-
-	BufferObject Buffer;
 	Camera& camera;
+	Shader r_BasicShader;
+
+	/* ----------Box---------- */
+	BufferObject r_BoxBuffer;
+	Texture r_BoxTexture;
+	/* ----------Plane---------- */
+	BufferObject r_PlaneBuffer;
+	Texture r_PlaneTexture;
+	/* ----------SkyBox---------- */
+	Shader r_SkyShader;
+	BufferObject r_SkyBuffer;
+	CubeMap r_Skybox;
+	/* ----------Quad---------- */
+	Shader r_QuadShader;
+	BufferObject r_QuadBuffer;
+	FrameBuffer r_FrameBuffer;
 public:
 	Renderer(Camera& m);
 	~Renderer();
 
-	void GenCube(const char* CubeId);
-	void GenLightCube(const char* LightCubeId);
-	void GenPlane(const char* Id);
-	void GenTestScene1();
+	void UpdateFrame();
 
-	void RenderPlane(const char* Id, Shader s, Texture t);
-	void RenderCube(glm::vec3 Pos, const char* CubeId, Shader s, Texture t);
-	void RenderLightCube(glm::vec3 Pos, const char* LightCubeId, Shader s, PointLight p);
-
+	void UpdateInput();
+	void DrawScene();
+private:
+	void DrawCube(Shader shader, CubeMap texture, BufferObject& Buffer, glm::vec3 pos, float f);
+	void DrawPlane(Shader shader, Texture texture, BufferObject& Buffer, glm::vec3 pos);
+	void DrawSkyBox(Shader shader, CubeMap Skybox, BufferObject& Buffer);
 };
 

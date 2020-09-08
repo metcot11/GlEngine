@@ -4,7 +4,11 @@
 #include <iostream>
 
 #include "Shader.h"
+#include "Textures/Texture.h"
 #include "data.h"
+
+static const int Width = 1240;
+static const int Heigth = 640;
 
 struct BufferLayout {
 	GLenum Target;
@@ -70,14 +74,14 @@ private:
 	unsigned int FrameId;
 	unsigned int RenderId;
 	unsigned int TextureId;
-
-	BufferObject QuadBuffer;
-	Shader QuadShader;
 public:
 	FrameBuffer();
 	~FrameBuffer() = default;
 
-	void Draw(void (*DrawCall)());
+	void Bind();
+	void UnBind();
+
+	void DrawQuad(Shader shader, BufferObject& buffer);
 };
 
 

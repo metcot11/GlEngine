@@ -6,11 +6,15 @@
 Texture::Texture()
 	:TextureId(0), textureName("texture")
 {
+	glGenTextures(1, &TextureId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1240, 640, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::Texture(const char* filePath, const char* Name, bool flip)
@@ -58,6 +62,14 @@ Texture::~Texture()
 {
 }
 
+void Texture::operator=(Texture t)
+{
+	this->TextureId = t.TextureId;
+	this->textureName = t.textureName;
+	this->Type = t.Type;
+	this->path = t.Type;
+}
+
 void Texture::LoadTexture2D(const char* filePath, bool flip)
 {
 	unsigned int texture;
@@ -95,6 +107,16 @@ void Texture::BindTexture2D(Shader shade, int slot)
 	glBindTexture(GL_TEXTURE_2D, TextureId);
 }
 
+void Texture::Bind()
+{
+	glBindTexture(GL_TEXTURE_2D, TextureId);
+}
+
+void Texture::UnBind()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 CubeMap::CubeMap(std::vector<const char*> filePaths)
 {
 	glGenTextures(1, & CubeMapId);
@@ -122,8 +144,38 @@ CubeMap::CubeMap(std::vector<const char*> filePaths)
 
 }
 
+CubeMap::CubeMap()
+{
+	glGenTextures(1, &CubeMapId);
+}
+
 CubeMap::~CubeMap()
 {
+}
+
+void CubeMap::LoadTextures(std::vector<const char*> filePaths)
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapId);
+	int width, height, nrChannels;
+	unsigned char* data;
+
+	for (unsigned int i = 0; i < filePaths.size(); i++) {
+		data = stbi_load(filePaths[i], &width, &height, &nrChannels, 0);
+		if (data) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else {
+			std::cout << "Failed to load CubeMap: " << filePaths[i] << '\n';
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
 }
 
 void CubeMap::BindCubeMap(Shader s, int slot)
